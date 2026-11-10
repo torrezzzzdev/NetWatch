@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30">
+    <title>NetWatch | Monitor de red</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111827;
+            color: #f9fafb;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #38bdf8;
+        }
+
+        p {
+            color: #9ca3af;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background-color: #1f2937;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #374151;
+        }
+
+        th {
+            color: #38bdf8;
+        }
+
+        tr:hover {
+            background-color: #374151;
+        }
+
+        .estado {
+            color: #facc15;
+        }
+        .resumen {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.tarjeta {
+    background-color: #1f2937;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #374151;
+}
+
+.tarjeta h3 {
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+.tarjeta p {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+/* Diseño general del panel */
+body {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Tarjetas de resumen */
+.tarjeta {
+    background: linear-gradient(145deg, #1f2937, #111827);
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #374151;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.tarjeta:hover {
+    transform: translateY(-4px);
+    border-color: #38bdf8;
+}
+
+/* Tabla */
+table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 20px;
+    }
+
+    .resumen {
+        grid-template-columns: 1fr;
+    }
+
+    th, td {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <h1>NetWatch</h1>
+    <p>Panel de monitoreo de dispositivos de red</p>
+    <p>Última actualización: {{ ultima_actualizacion }}</p>
+    <div class="resumen">
+
+    <div class="tarjeta">
+        <h3>Dispositivos registrados</h3>
+        <p>{{ total_dispositivos }}</p>
+    </div>
+
+    <div class="tarjeta">
+        <h3>En línea</h3>
+        <p style="color: #4ade80;">{{ en_linea }}</p>
+    </div>
+
+    <div class="tarjeta">
+        <h3>Fuera de línea</h3>
+        <p style="color: #f87171;">{{ fuera_linea }}</p>
+    </div>
+
+</div>
+
+    <h2>Dispositivos registrados</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Dirección IP</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for dispositivo in dispositivos %}
+            <tr>
+                <td>{{ dispositivo.id }}</td>
+                <td>{{ dispositivo.nombre }}</td>
+                <td>{{ dispositivo.ip }}</td>
+                <td class="estado">
+    {% if dispositivo.estado == "En línea" %}
+        <span style="color: #4ade80;">● En línea</span>
+    {% else %}
+        <span style="color: #f87171;">● Fuera de línea</span>
+    {% endif %}
+</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No hay dispositivos registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Historial de conectividad</h2>
+
+<p>Últimos 10 eventos registrados por NetWatch.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Dispositivo</th>
+            <th>Dirección IP</th>
+            <th>Estado</th>
+            <th>Fecha y hora</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for evento in historial %}
+        <tr>
+            <td>{{ evento.nombre }}</td>
+            <td>{{ evento.ip }}</td>
+
+            <td>
+                {% if evento.estado == "En línea" %}
+                    <span style="color: #4ade80;">● En línea</span>
+                {% else %}
+                    <span style="color: #f87171;">● Fuera de línea</span>
+                {% endif %}
+            </td>
+
+            <td>{{ evento.fecha }}</td>
+        </tr>
+
+        {% else %}
+        <tr>
+            <td colspan="4">Todavía no hay eventos registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
